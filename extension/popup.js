@@ -160,24 +160,23 @@ function renderBillList(bills) {
 
 async function handleScanNow() {
   // Show the spinner while scanning.
-  scanSpinner.hidden = false;
-  elBtnScanNow.disabled = true;
+  if (scanSpinner) scanSpinner.hidden = false;
+  if (elBtnScanNow) elBtnScanNow.disabled = true;
 
   try {
-    // Tell the background service worker to scan immediately.
+    // Tell the background service worker to scan and wait for it to finish.
     await sendMessageToBackground({ action: 'scanNow' });
-
-    // The background worker updates chrome.storage.local when done.
-    // Poll briefly then reload the bill list.
-    await sleep(2000);
+    // Give the background worker a moment to write results to storage.
+    await sleep(3000);
     await loadBillSummary();
     showStatus('Scan complete!', 'success');
   } catch (err) {
     console.error('BillAlert: scan error', err);
     showStatus('Scan failed. Check your connection and try again.', 'error');
   } finally {
-    scanSpinner.hidden  = true;
-    elBtnScanNow.disabled = false;
+    // Always hide spinner and re-enable button regardless of outcome.
+    if (scanSpinner) scanSpinner.hidden = true;
+    if (elBtnScanNow) elBtnScanNow.disabled = false;
   }
 }
 

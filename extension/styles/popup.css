@@ -290,6 +290,11 @@ html, body {
   gap: 10px;
 }
 
+/* Ensure hidden attribute always wins over display:flex */
+.spinner-wrap[hidden] {
+  display: none !important;
+}
+
 .spinner {
   width: 28px;
   height: 28px;
