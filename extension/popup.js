@@ -33,11 +33,11 @@ let viewSignedOut, viewSignedIn, elBtnSignIn, elBtnSignOut, userEmailEl,
  * Decides which view to show based on whether an auth token exists.
  */
 async function init() {
-  // Auth functions come from auth.js (Agent 3).
-  // getStoredToken() resolves to a token string or null.
-  const token = await authGetToken();
+  // Check the signedIn flag in storage — fast, no network call needed.
+  // Full token validation happens lazily when a scan is triggered.
+  const data = await new Promise(r => chrome.storage.local.get(['signedIn', 'authToken'], r));
 
-  if (token) {
+  if (data.signedIn && data.authToken) {
     await showSignedInView();
   } else {
     showSignedOutView();
