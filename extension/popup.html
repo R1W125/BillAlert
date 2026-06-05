@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BillAlert</title>
+  <link rel="stylesheet" href="styles/popup.css" />
+</head>
+<body>
+
+  <!-- ===== APP HEADER ===== -->
+  <header class="app-header">
+    <img src="icons/icon48.png" alt="BillAlert logo" class="header-logo" />
+    <h1 class="app-title">BillAlert</h1>
+  </header>
+
+  <!-- ===== SIGNED-OUT STATE ===== -->
+  <!-- Shown when the user has not connected their Google account yet -->
+  <section id="view-signed-out" class="view" hidden>
+    <div class="hero-card">
+      <p class="hero-text">
+        Connect your Google account so BillAlert can scan your Gmail for
+        upcoming bills and remind you before they're due.
+      </p>
+      <ul class="feature-list">
+        <li>✅ Read-only access — we never modify your email</li>
+        <li>✅ Your email content stays private</li>
+        <li>✅ Cancel any time</li>
+      </ul>
+      <button id="btn-sign-in" class="btn btn-primary btn-large">
+        <img src="icons/google-logo.svg" alt="" class="btn-icon" aria-hidden="true" />
+        Sign in with Google
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== SIGNED-IN STATE ===== -->
+  <!-- Shown once the user is authenticated -->
+  <section id="view-signed-in" class="view" hidden>
+
+    <!-- User identity bar -->
+    <div class="identity-bar">
+      <span class="identity-email" id="user-email">loading…</span>
+      <button id="btn-sign-out" class="btn btn-ghost btn-small">Sign out</button>
+    </div>
+
+    <!-- Scan controls -->
+    <div class="card scan-card">
+      <div class="card-header">
+        <h2 class="card-title">Bills &amp; Payments</h2>
+        <button id="btn-scan-now" class="btn btn-primary btn-small">
+          Scan Now
+        </button>
+      </div>
+
+      <!-- Loading spinner — shown while scanning -->
+      <div id="scan-spinner" class="spinner-wrap" hidden>
+        <div class="spinner" role="status" aria-label="Scanning your Gmail…"></div>
+        <p class="spinner-label">Scanning your Gmail…</p>
+      </div>
+
+      <!-- Bill summary list -->
+      <div id="bill-list-wrap">
+        <ul id="bill-list" class="bill-list" aria-label="Upcoming bills">
+          <!-- Bill cards injected by popup.js -->
+        </ul>
+        <!-- Empty state when no bills were found -->
+        <p id="no-bills-msg" class="empty-state" hidden>
+          No upcoming bills found. Try scanning again!
+        </p>
+      </div>
+    </div>
+
+    <!-- Notification time picker -->
+    <div class="card reminder-card">
+      <h2 class="card-title">Daily Reminder Times</h2>
+      <p class="card-subtitle">
+        Choose the times you'd like to receive bill reminders each day.
+      </p>
+
+      <!-- List of chosen times -->
+      <ul id="time-list" class="time-list" aria-label="Reminder times">
+        <!-- Time chips injected by popup.js -->
+      </ul>
+
+      <!-- Add a new time -->
+      <div class="time-add-row">
+        <input
+          type="time"
+          id="input-new-time"
+          class="time-input"
+          aria-label="New reminder time"
+          value="09:00"
+        />
+        <button id="btn-add-time" class="btn btn-secondary btn-small">
+          + Add Time
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== GLOBAL STATUS BAR ===== -->
+  <!-- Shows transient success / error messages -->
+  <div id="status-bar" class="status-bar" role="status" aria-live="polite" hidden>
+    <span id="status-message"></span>
+  </div>
+
+  <!-- Auth functions provided by auth.js (Agent 3) -->
+  <script src="auth.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

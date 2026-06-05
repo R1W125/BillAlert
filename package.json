@@ -1,0 +1,12 @@
+{
+  "name": "bilalert",
+  "version": "1.0.0",
+  "description": "BillAlert — root workspace. Runs all tests across backend and extension.",
+  "private": true,
+  "scripts": {
+    "test": "npm --prefix backend test && npm --prefix extension test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

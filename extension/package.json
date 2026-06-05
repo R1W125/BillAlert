@@ -1,0 +1,19 @@
+{
+  "name": "bilalert-extension",
+  "version": "1.0.0",
+  "description": "BillAlert Chrome extension — Jest test suite",
+  "private": true,
+  "scripts": {
+    "test": "jest --runInBand --forceExit"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-chrome": "^0.8.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFiles": ["jest-chrome/setup"],
+    "testMatch": ["**/tests/**/*.test.js"]
+  }
+}

@@ -1,0 +1,400 @@
+/**
+ * popup.css — BillAlert Chrome Extension
+ *
+ * Clean, modern card-based UI for non-technical everyday users.
+ * Color scheme: deep blue (#1a73e8) primary, white background, soft shadows.
+ * Fixed width of 380px — standard Chrome extension popup width.
+ */
+
+/* ─── Reset & base ─────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 380px;
+  min-height: 200px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #202124;
+  background-color: #f8f9fa;
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.header-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ─── View containers ──────────────────────────────────────────────────────── */
+
+.view {
+  padding: 12px 14px;
+}
+
+/* ─── Hero / sign-in card ──────────────────────────────────────────────────── */
+
+.hero-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  text-align: center;
+}
+
+.hero-text {
+  font-size: 13.5px;
+  color: #444;
+  margin-bottom: 14px;
+}
+
+.feature-list {
+  list-style: none;
+  text-align: left;
+  margin: 0 auto 18px;
+  display: inline-block;
+  font-size: 13px;
+  color: #555;
+}
+
+.feature-list li {
+  padding: 3px 0;
+}
+
+/* ─── Cards (generic) ──────────────────────────────────────────────────────── */
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 14px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.10);
+  margin-bottom: 12px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #202124;
+}
+
+.card-subtitle {
+  font-size: 12.5px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* ─── Identity bar ─────────────────────────────────────────────────────────── */
+
+.identity-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 4px 4px;
+  margin-bottom: 4px;
+}
+
+.identity-email {
+  font-size: 12.5px;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+.btn-large {
+  padding: 10px 20px;
+  font-size: 14.5px;
+}
+
+.btn-small {
+  padding: 5px 12px;
+  font-size: 12.5px;
+}
+
+/* Styles */
+.btn-primary {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #1557b0;
+}
+
+.btn-secondary {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #c5d8fd;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: #d93025;
+  border: 1px solid #d93025;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: #fce8e6;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─── Bill list ────────────────────────────────────────────────────────────── */
+
+.bill-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+/* Individual bill card */
+.bill-item {
+  position: relative;
+  background: #f8f9fa;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+  padding: 10px 12px 8px;
+}
+
+.bill-payee {
+  font-weight: 600;
+  font-size: 14px;
+  color: #202124;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 270px;
+}
+
+.bill-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Amount — shown in green to feel positive/actionable */
+.bill-amount {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #188038; /* Google green */
+}
+
+/* Due date — muted gray */
+.bill-due {
+  font-size: 12.5px;
+  color: #70757a;
+}
+
+/* Confidence badge — small pill in the top-right corner */
+.bill-confidence {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+
+.confidence-high {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.confidence-medium {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+.confidence-low {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+
+/* Empty state message */
+.empty-state {
+  text-align: center;
+  padding: 16px 0 8px;
+  color: #70757a;
+  font-size: 13px;
+}
+
+/* ─── Loading spinner ──────────────────────────────────────────────────────── */
+
+.spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0;
+  gap: 10px;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e8eaed;
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-label {
+  font-size: 12.5px;
+  color: #70757a;
+}
+
+/* ─── Notification time chips ──────────────────────────────────────────────── */
+
+.time-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 10px;
+  min-height: 30px;
+}
+
+.time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  border-radius: 20px;
+  padding: 4px 10px 4px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.time-chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #5f6368;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 2px;
+  border-radius: 50%;
+  transition: background-color 0.12s;
+}
+
+.time-chip-remove:hover {
+  background-color: rgba(0,0,0,.08);
+  color: #d93025;
+}
+
+/* ─── Time picker row ──────────────────────────────────────────────────────── */
+
+.time-add-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.time-input {
+  flex: 1;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #202124;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.time-input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26,115,232,.2);
+}
+
+/* ─── Status bar ───────────────────────────────────────────────────────────── */
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-top: 1px solid #e8eaed;
+}
+
+.status-success {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.status-error {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+
+.status-info {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
