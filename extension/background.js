@@ -20,7 +20,7 @@ importScripts('auth.js');
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 /** Base URL of the BillAlert backend server. Replace before production deploy. */
-const BACKEND_URL = 'https://your-backend.railway.app';
+const BACKEND_URL = 'https://billalert-production.up.railway.app';
 
 /** Gmail API base URL */
 const GMAIL_API_BASE = 'https://www.googleapis.com/gmail/v1/users/me';
