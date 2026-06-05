@@ -402,4 +402,12 @@ function sleep(ms) {
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  // Always show signed-out view immediately so popup is never blank,
+  // then let init() switch to signed-in if a token exists.
+  showSignedOutView();
+  init().catch(err => {
+    console.error('BillAlert: init failed', err);
+    showSignedOutView();
+  });
+});
