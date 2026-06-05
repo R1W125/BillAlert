@@ -36,7 +36,7 @@ function getGeminiModel() {
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  _geminiModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  _geminiModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-8b' });
   return _geminiModel;
 }
 
