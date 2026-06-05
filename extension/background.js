@@ -36,7 +36,7 @@ const GMAIL_API_BASE = 'https://www.googleapis.com/gmail/v1/users/me';
  * sent within the last 30 days.
  */
 const GMAIL_QUERY =
-  'subject:(bill OR invoice OR payment OR subscription OR due) newer_than:30d';
+  'in:inbox -in:spam -in:trash subject:(bill OR invoice OR payment OR subscription OR due) newer_than:30d';
 
 /** Number of emails to fetch per scan (Gmail API maxResults). */
 const MAX_EMAILS = 100;
