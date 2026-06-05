@@ -11,23 +11,20 @@
  * provided by auth.js which is loaded before this script.
  */
 
-// ─── Auth module bridge ───────────────────────────────────────────────────────
-// auth.js exposes functions via globalThis.BillAlertAuth. We alias them here
-// so the rest of popup.js can call signIn(), signOut(), etc. directly.
-const _auth         = globalThis.BillAlertAuth || {};
-const signIn        = _auth.signIn        || (() => Promise.resolve({ success: false, error: 'auth module not loaded' }));
-const signOut       = _auth.signOut       || (() => Promise.resolve({ success: false }));
-const getStoredToken = async () => { return _auth.getToken ? _auth.getToken() : null; };
-const getUserEmail  = async () => {
+// ─── Auth helpers ─────────────────────────────────────────────────────────────
+// Thin wrappers around globalThis.BillAlertAuth (loaded by auth.js).
+function authSignIn()   { return globalThis.BillAlertAuth ? globalThis.BillAlertAuth.signIn()  : Promise.resolve({ success: false }); }
+function authSignOut()  { return globalThis.BillAlertAuth ? globalThis.BillAlertAuth.signOut() : Promise.resolve({ success: false }); }
+function authGetToken() { return globalThis.BillAlertAuth ? globalThis.BillAlertAuth.getToken() : Promise.resolve(null); }
+async function authGetEmail() {
   const data = await new Promise(r => chrome.storage.local.get('userEmail', r));
   return data.userEmail || null;
-};
+}
 
 // ─── Element shortcuts (initialised inside DOMContentLoaded) ─────────────────
-// Declared here so all functions below can reference them.
-let viewSignedOut, viewSignedIn, btnSignIn, btnSignOut, userEmailEl,
-    btnScanNow, scanSpinner, billList, noBillsMsg, timeList,
-    inputNewTime, btnAddTime, statusBar, statusMessage;
+let viewSignedOut, viewSignedIn, elBtnSignIn, elBtnSignOut, userEmailEl,
+    elBtnScanNow, scanSpinner, billList, noBillsMsg, timeList,
+    inputNewTime, elBtnAddTime, statusBar, statusMessage;
 
 // ─── Initialisation ──────────────────────────────────────────────────────────
 
@@ -38,7 +35,7 @@ let viewSignedOut, viewSignedIn, btnSignIn, btnSignOut, userEmailEl,
 async function init() {
   // Auth functions come from auth.js (Agent 3).
   // getStoredToken() resolves to a token string or null.
-  const token = await getStoredToken();
+  const token = await authGetToken();
 
   if (token) {
     await showSignedInView();
@@ -65,7 +62,7 @@ async function showSignedInView() {
 
   // Show the user's email address in the identity bar.
   // getUserEmail() is provided by auth.js.
-  const email = await getUserEmail();
+  const email = await authGetEmail();
   userEmailEl.textContent = email || 'your account';
 
   // Load bills and reminder times from local storage.
@@ -76,21 +73,21 @@ async function showSignedInView() {
 // ─── Sign in / Sign out ───────────────────────────────────────────────────────
 
 async function handleSignIn() {
-  setButtonLoading(btnSignIn, true, 'Signing in…');
+  setButtonLoading(elBtnSignIn, true, 'Signing in…');
   try {
-    await signIn();
+    await authSignIn();
     await showSignedInView();
     showStatus('Signed in successfully!', 'success');
   } catch (err) {
     console.error('BillAlert: sign-in error', err);
     showStatus('Sign-in failed. Please try again.', 'error');
   } finally {
-    setButtonLoading(btnSignIn, false, 'Sign in with Google');
+    setButtonLoading(elBtnSignIn, false, 'Sign in with Google');
   }
 }
 
 async function handleSignOut() {
-  await signOut();
+  await authSignOut();
   showSignedOutView();
   showStatus('Signed out.', 'info');
 }
@@ -164,7 +161,7 @@ function renderBillList(bills) {
 async function handleScanNow() {
   // Show the spinner while scanning.
   scanSpinner.hidden = false;
-  btnScanNow.disabled = true;
+  elBtnScanNow.disabled = true;
 
   try {
     // Tell the background service worker to scan immediately.
@@ -180,7 +177,7 @@ async function handleScanNow() {
     showStatus('Scan failed. Check your connection and try again.', 'error');
   } finally {
     scanSpinner.hidden  = true;
-    btnScanNow.disabled = false;
+    elBtnScanNow.disabled = false;
   }
 }
 
@@ -393,24 +390,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialise element references now that the DOM is ready.
   viewSignedOut = document.getElementById('view-signed-out');
   viewSignedIn  = document.getElementById('view-signed-in');
-  btnSignIn     = document.getElementById('btn-sign-in');
-  btnSignOut    = document.getElementById('btn-sign-out');
+  elBtnSignIn   = document.getElementById('btn-sign-in');
+  elBtnSignOut  = document.getElementById('btn-sign-out');
   userEmailEl   = document.getElementById('user-email');
-  btnScanNow    = document.getElementById('btn-scan-now');
+  elBtnScanNow  = document.getElementById('btn-scan-now');
   scanSpinner   = document.getElementById('scan-spinner');
   billList      = document.getElementById('bill-list');
   noBillsMsg    = document.getElementById('no-bills-msg');
   timeList      = document.getElementById('time-list');
   inputNewTime  = document.getElementById('input-new-time');
-  btnAddTime    = document.getElementById('btn-add-time');
+  elBtnAddTime  = document.getElementById('btn-add-time');
   statusBar     = document.getElementById('status-bar');
   statusMessage = document.getElementById('status-message');
 
   // Wire up button listeners now that elements exist.
-  btnSignIn.addEventListener('click', handleSignIn);
-  btnSignOut.addEventListener('click', handleSignOut);
-  btnScanNow.addEventListener('click', handleScanNow);
-  btnAddTime.addEventListener('click', handleAddTime);
+  elBtnSignIn.addEventListener('click', handleSignIn);
+  elBtnSignOut.addEventListener('click', handleSignOut);
+  elBtnScanNow.addEventListener('click', handleScanNow);
+  elBtnAddTime.addEventListener('click', handleAddTime);
 
   // Show signed-out view immediately, then check auth state.
   showSignedOutView();
