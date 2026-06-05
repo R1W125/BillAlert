@@ -35,18 +35,14 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 
 const allowedOrigin = process.env.ALLOWED_ORIGIN;
 
-const corsOptions = allowedOrigin
-  ? {
-      origin: allowedOrigin,
-      methods: ['GET', 'POST', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Key'],
-    }
-  : {
-      // In development with no ALLOWED_ORIGIN set, allow all origins
-      origin: '*',
-      methods: ['GET', 'POST', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Key'],
-    };
+const corsOptions = {
+  // Allow the specific extension origin if set, otherwise allow all
+  // (needed for Chrome extension requests which send an origin header)
+  origin: allowedOrigin || true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Key'],
+  credentials: true,
+};
 
 app.use(cors(corsOptions));
 
@@ -87,11 +83,13 @@ app.get('/', (_req, res) => {
  * Returns 401 if the key is missing or incorrect.
  */
 function requireApiKey(req, res, next) {
+  // Always allow OPTIONS preflight requests through so CORS headers are set
+  // before any auth check — otherwise the browser never sees the CORS headers.
+  if (req.method === 'OPTIONS') return next();
+
   const serverKey = process.env.API_KEY;
 
   if (!serverKey) {
-    // Fail loudly if the server is misconfigured — don't let unauthenticated
-    // requests through just because API_KEY was forgotten.
     console.error('[auth] API_KEY environment variable is not set — rejecting all requests');
     return res.status(503).json({ error: 'server_misconfigured', message: 'API key not configured on server' });
   }
