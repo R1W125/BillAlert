@@ -39,7 +39,7 @@ const GMAIL_QUERY =
   'in:inbox -in:spam -in:trash subject:(bill OR invoice OR payment OR subscription OR due) newer_than:30d';
 
 /** Number of emails to fetch per scan (Gmail API maxResults). */
-const MAX_EMAILS = 100;
+const MAX_EMAILS = 50;
 
 /** Prefix used for all chrome.alarms names managed by BillAlert. */
 const ALARM_PREFIX = 'billalertalarm_';
@@ -355,7 +355,7 @@ async function summariseWithBackend(userId, emails) {
       'Content-Type': 'application/json',
       'X-API-Key':    EXTENSION_API_KEY,
     },
-    body: JSON.stringify({ userId, emails }),
+    body: JSON.stringify({ userId, emails: emails.slice(0, 50) }),
   });
 
   if (!response.ok) {
