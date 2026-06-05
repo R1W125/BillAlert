@@ -26,7 +26,7 @@ const BACKEND_URL = 'https://billalert-production.up.railway.app';
  * Shared API key sent with every backend request via X-API-Key header.
  * Must match the API_KEY environment variable set in Railway.
  */
-const EXTENSION_API_KEY = 'YOUR_API_KEY_HERE';
+const EXTENSION_API_KEY = '5a2860779bc36a4262bd1809dd740301a17efffba05ebfebf6599df40d591462';
 
 /** Gmail API base URL */
 const GMAIL_API_BASE = 'https://www.googleapis.com/gmail/v1/users/me';
@@ -39,7 +39,7 @@ const GMAIL_QUERY =
   'subject:(bill OR invoice OR payment OR subscription OR due) newer_than:30d';
 
 /** Number of emails to fetch per scan (Gmail API maxResults). */
-const MAX_EMAILS = 50;
+const MAX_EMAILS = 100;
 
 /** Prefix used for all chrome.alarms names managed by BillAlert. */
 const ALARM_PREFIX = 'billalertalarm_';
