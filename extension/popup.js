@@ -95,21 +95,47 @@ async function handleSignOut() {
 // ─── Bill Summary ─────────────────────────────────────────────────────────────
 
 /**
- * Reads the "billSummary" key from chrome.storage.local and renders
- * bill cards in the list. The background service worker writes this
- * key after each successful Gmail scan.
+ * Reads the "billSummary" and "paidBills" keys from chrome.storage.local
+ * and renders bill cards in the list. The background service worker writes
+ * "billSummary" after each successful Gmail scan.
  */
 async function loadBillSummary() {
-  const data = await chromeStorageGet('billSummary');
+  const data = await chromeStorageGet(['billSummary', 'paidBills']);
   const bills = data.billSummary || [];
-  renderBillList(bills);
+  const paidIds = data.paidBills || [];
+  renderBillList(bills, paidIds);
 }
 
 /**
- * Renders an array of bill objects as list items.
- * Each bill has: { payee, amount, dueDate, confidence }
+ * Adds a bill ID to the paidBills array in storage and re-renders.
+ * @param {string} billId - "${bill.payee}-${bill.dueDate}" identifier
  */
-function renderBillList(bills) {
+async function markBillPaid(billId) {
+  const data = await new Promise(r => chrome.storage.local.get('paidBills', r));
+  const paid = data.paidBills || [];
+  if (!paid.includes(billId)) paid.push(billId);
+  await new Promise(r => chrome.storage.local.set({ paidBills: paid }, r));
+  await loadBillSummary();
+}
+
+/**
+ * Removes a bill ID from the paidBills array in storage and re-renders.
+ * @param {string} billId - "${bill.payee}-${bill.dueDate}" identifier
+ */
+async function unmarkBillPaid(billId) {
+  const data = await new Promise(r => chrome.storage.local.get('paidBills', r));
+  const paid = (data.paidBills || []).filter(id => id !== billId);
+  await new Promise(r => chrome.storage.local.set({ paidBills: paid }, r));
+  await loadBillSummary();
+}
+
+/**
+ * Renders an array of bill objects as list items, split into unpaid and paid.
+ * Each bill has: { payee, amount, dueDate, confidence }
+ * @param {Array}    bills   - All bills from billSummary storage
+ * @param {string[]} paidIds - IDs of bills marked as paid
+ */
+function renderBillList(bills, paidIds = []) {
   // Clear previous content.
   billList.innerHTML = '';
 
@@ -119,13 +145,22 @@ function renderBillList(bills) {
     return;
   }
 
-  noBillsMsg.hidden = false; // keep hidden
   noBillsMsg.hidden = true;
   billList.hidden   = false;
 
-  bills.forEach(bill => {
+  // Split bills into unpaid and paid using the composite ID.
+  const unpaid = bills.filter(b => !paidIds.includes(`${b.payee}-${b.dueDate}`));
+  const paid   = bills.filter(b =>  paidIds.includes(`${b.payee}-${b.dueDate}`));
+
+  /** Builds and appends a single bill <li> element.
+   * @param {Object}  bill    - Bill data object
+   * @param {boolean} isPaid  - Whether this bill is marked paid
+   */
+  function appendBillItem(bill, isPaid) {
+    const billId = `${bill.payee}-${bill.dueDate}`;
+
     const li = document.createElement('li');
-    li.className = 'bill-item';
+    li.className = `bill-item${isPaid ? ' paid' : ''}`;
     li.setAttribute('role', 'listitem');
 
     // Format amount — show "Unknown" if not parsed
@@ -141,19 +176,45 @@ function renderBillList(bills) {
     // Confidence badge (high / medium / low)
     const confidenceClass = `confidence-${(bill.confidence || 'low').toLowerCase()}`;
 
+    // Paid bills get reduced opacity via CSS class; button differs per state
     li.innerHTML = `
-      <div class="bill-payee">${escapeHtml(bill.payee || 'Unknown Payee')}</div>
-      <div class="bill-meta">
-        <span class="bill-amount">${amountText}</span>
-        <span class="bill-due">${dueDateText}</span>
+      <div class="bill-info">
+        <div class="bill-payee">${escapeHtml(bill.payee || 'Unknown Payee')}</div>
+        <div class="bill-meta">
+          <span class="bill-amount">${amountText}</span>
+          <span class="bill-due">${dueDateText}</span>
+        </div>
+        <span class="bill-confidence ${confidenceClass}" title="Detection confidence">
+          ${(bill.confidence || 'low').toLowerCase()}
+        </span>
       </div>
-      <span class="bill-confidence ${confidenceClass}" title="Detection confidence">
-        ${(bill.confidence || 'low').toLowerCase()}
-      </span>
+      <button class="${isPaid ? 'btn-undo-paid' : 'btn-mark-paid'}" data-bill-id="${escapeHtml(billId)}">
+        ${isPaid ? '↩ Undo' : '✓ Paid'}
+      </button>
     `;
 
+    // Attach click listener to the action button.
+    const actionBtn = li.querySelector(isPaid ? '.btn-undo-paid' : '.btn-mark-paid');
+    actionBtn.addEventListener('click', () => {
+      isPaid ? unmarkBillPaid(billId) : markBillPaid(billId);
+    });
+
     billList.appendChild(li);
-  });
+  }
+
+  // Render unpaid bills first.
+  unpaid.forEach(bill => appendBillItem(bill, false));
+
+  // Render paid bills section below, if any exist.
+  if (paid.length > 0) {
+    const sectionHeader = document.createElement('li');
+    sectionHeader.className = 'paid-section-header';
+    sectionHeader.setAttribute('role', 'presentation');
+    sectionHeader.textContent = 'Paid Bills';
+    billList.appendChild(sectionHeader);
+
+    paid.forEach(bill => appendBillItem(bill, true));
+  }
 }
 
 // ─── Scan Now ─────────────────────────────────────────────────────────────────
