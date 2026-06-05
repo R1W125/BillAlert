@@ -21,7 +21,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const cors = require('cors');
 
 const summarizeRouter = require('./routes/summarize');
 const usageRouter = require('./routes/usage');
@@ -35,19 +34,40 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 
 const allowedOrigin = process.env.ALLOWED_ORIGIN;
 
-const corsOptions = {
-  // Allow the specific extension origin if set, otherwise allow all
-  // (needed for Chrome extension requests which send an origin header)
-  origin: allowedOrigin || true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Key'],
-  credentials: true,
-};
+/**
+ * Manual CORS middleware — runs before everything else.
+ * Explicitly sets headers for Chrome extension and configured origins.
+ * Using manual headers instead of the cors() package to ensure preflight
+ * responses always include Access-Control-Allow-Origin.
+ */
+app.use((req, res, next) => {
+  const origin = req.headers.origin || '';
 
-app.use(cors(corsOptions));
+  const isAllowed =
+    !origin ||
+    origin.startsWith('chrome-extension://') ||
+    !allowedOrigin ||
+    origin === allowedOrigin;
 
-// Handle pre-flight requests
-app.options('*', cors(corsOptions));
+  if (isAllowed && origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  } else if (isAllowed) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key, X-Admin-Key');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+
+  // Respond immediately to preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 // ---------------------------------------------------------------------------
 // Body parsing
