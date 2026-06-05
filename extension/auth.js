@@ -27,7 +27,11 @@
 const LOG_PREFIX = '[BillAlert Auth]';
 
 /** OAuth2 scopes requested. Kept minimal — read-only Gmail access only. */
-const GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
+const GMAIL_SCOPES = [
+  'https://www.googleapis.com/auth/gmail.readonly',
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+];
 
 /** Google API endpoints used by this module. */
 const GOOGLE_APIS = {
