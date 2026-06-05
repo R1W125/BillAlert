@@ -23,22 +23,11 @@ const getUserEmail  = async () => {
   return data.userEmail || null;
 };
 
-// ─── Element shortcuts ────────────────────────────────────────────────────────
-
-const viewSignedOut  = document.getElementById('view-signed-out');
-const viewSignedIn   = document.getElementById('view-signed-in');
-const btnSignIn      = document.getElementById('btn-sign-in');
-const btnSignOut     = document.getElementById('btn-sign-out');
-const userEmailEl    = document.getElementById('user-email');
-const btnScanNow     = document.getElementById('btn-scan-now');
-const scanSpinner    = document.getElementById('scan-spinner');
-const billList       = document.getElementById('bill-list');
-const noBillsMsg     = document.getElementById('no-bills-msg');
-const timeList       = document.getElementById('time-list');
-const inputNewTime   = document.getElementById('input-new-time');
-const btnAddTime     = document.getElementById('btn-add-time');
-const statusBar      = document.getElementById('status-bar');
-const statusMessage  = document.getElementById('status-message');
+// ─── Element shortcuts (initialised inside DOMContentLoaded) ─────────────────
+// Declared here so all functions below can reference them.
+let viewSignedOut, viewSignedIn, btnSignIn, btnSignOut, userEmailEl,
+    btnScanNow, scanSpinner, billList, noBillsMsg, timeList,
+    inputNewTime, btnAddTime, statusBar, statusMessage;
 
 // ─── Initialisation ──────────────────────────────────────────────────────────
 
@@ -86,10 +75,9 @@ async function showSignedInView() {
 
 // ─── Sign in / Sign out ───────────────────────────────────────────────────────
 
-btnSignIn.addEventListener('click', async () => {
+async function handleSignIn() {
   setButtonLoading(btnSignIn, true, 'Signing in…');
   try {
-    // signIn() is provided by auth.js — launches the OAuth flow.
     await signIn();
     await showSignedInView();
     showStatus('Signed in successfully!', 'success');
@@ -99,14 +87,13 @@ btnSignIn.addEventListener('click', async () => {
   } finally {
     setButtonLoading(btnSignIn, false, 'Sign in with Google');
   }
-});
+}
 
-btnSignOut.addEventListener('click', async () => {
-  // signOut() is provided by auth.js — revokes and clears the token.
+async function handleSignOut() {
   await signOut();
   showSignedOutView();
   showStatus('Signed out.', 'info');
-});
+}
 
 // ─── Bill Summary ─────────────────────────────────────────────────────────────
 
@@ -174,7 +161,7 @@ function renderBillList(bills) {
 
 // ─── Scan Now ─────────────────────────────────────────────────────────────────
 
-btnScanNow.addEventListener('click', async () => {
+async function handleScanNow() {
   // Show the spinner while scanning.
   scanSpinner.hidden = false;
   btnScanNow.disabled = true;
@@ -195,7 +182,7 @@ btnScanNow.addEventListener('click', async () => {
     scanSpinner.hidden  = true;
     btnScanNow.disabled = false;
   }
-});
+}
 
 // ─── Notification Times ───────────────────────────────────────────────────────
 
@@ -234,7 +221,7 @@ function renderTimeChips(times) {
 }
 
 /** Adds a new notification time entered by the user. */
-btnAddTime.addEventListener('click', async () => {
+async function handleAddTime() {
   const newTime = inputNewTime.value; // "HH:MM" format
   if (!newTime) {
     showStatus('Please select a valid time.', 'error');
@@ -254,7 +241,7 @@ btnAddTime.addEventListener('click', async () => {
   await saveNotificationTimes(updated);
   renderTimeChips(updated);
   showStatus(`Reminder set for ${formatTime12h(newTime)}.`, 'success');
-});
+}
 
 /** Removes a specific notification time from the list. */
 async function removeNotificationTime(timeToRemove) {
@@ -403,8 +390,29 @@ function sleep(ms) {
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Always show signed-out view immediately so popup is never blank,
-  // then let init() switch to signed-in if a token exists.
+  // Initialise element references now that the DOM is ready.
+  viewSignedOut = document.getElementById('view-signed-out');
+  viewSignedIn  = document.getElementById('view-signed-in');
+  btnSignIn     = document.getElementById('btn-sign-in');
+  btnSignOut    = document.getElementById('btn-sign-out');
+  userEmailEl   = document.getElementById('user-email');
+  btnScanNow    = document.getElementById('btn-scan-now');
+  scanSpinner   = document.getElementById('scan-spinner');
+  billList      = document.getElementById('bill-list');
+  noBillsMsg    = document.getElementById('no-bills-msg');
+  timeList      = document.getElementById('time-list');
+  inputNewTime  = document.getElementById('input-new-time');
+  btnAddTime    = document.getElementById('btn-add-time');
+  statusBar     = document.getElementById('status-bar');
+  statusMessage = document.getElementById('status-message');
+
+  // Wire up button listeners now that elements exist.
+  btnSignIn.addEventListener('click', handleSignIn);
+  btnSignOut.addEventListener('click', handleSignOut);
+  btnScanNow.addEventListener('click', handleScanNow);
+  btnAddTime.addEventListener('click', handleAddTime);
+
+  // Show signed-out view immediately, then check auth state.
   showSignedOutView();
   init().catch(err => {
     console.error('BillAlert: init failed', err);
