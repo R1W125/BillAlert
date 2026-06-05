@@ -19,8 +19,14 @@ importScripts('auth.js');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-/** Base URL of the BillAlert backend server. Replace before production deploy. */
+/** Base URL of the BillAlert backend server. */
 const BACKEND_URL = 'https://billalert-production.up.railway.app';
+
+/**
+ * Shared API key sent with every backend request via X-API-Key header.
+ * Must match the API_KEY environment variable set in Railway.
+ */
+const EXTENSION_API_KEY = 'YOUR_API_KEY_HERE';
 
 /** Gmail API base URL */
 const GMAIL_API_BASE = 'https://www.googleapis.com/gmail/v1/users/me';
@@ -46,8 +52,10 @@ const ALARM_PREFIX = 'billalertalarm_';
  */
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason === 'install') {
-    console.log('BillAlert: first install — setting up default alarm at 9:00 AM');
-    await setDefaultAlarms();
+    // No automatic scan on install — user triggers scans manually via
+    // the popup. Alarms are only created when the user adds a reminder
+    // time in the notification time picker.
+    console.log('BillAlert: installed. Scans are manual until user sets a reminder time.');
   }
 });
 
@@ -343,8 +351,11 @@ async function gmailFetch(url, token) {
 async function summariseWithBackend(userId, emails) {
   const response = await fetch(`${BACKEND_URL}/summarize`, {
     method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ userId, emails }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key':    EXTENSION_API_KEY,
+    },
+    body: JSON.stringify({ userId, emails }),
   });
 
   if (!response.ok) {
