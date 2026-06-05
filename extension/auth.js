@@ -214,14 +214,15 @@ async function signIn() {
     const profile = await profileResponse.json();
 
     // Validate that the response contains the fields we need.
-    if (!profile.sub || !profile.email) {
-      throw new Error('User profile response missing required fields (sub, email)');
+    // Google's v1 userinfo endpoint may return either `sub` or `id` for the
+    // unique account identifier depending on the token scopes granted.
+    const accountId = profile.sub || profile.id;
+    if (!accountId || !profile.email) {
+      throw new Error(`User profile response missing required fields. Got: ${JSON.stringify(Object.keys(profile))}`);
     }
 
-    // Step 3: Hash the `sub` claim. The raw `sub` value is never assigned to a
-    // variable that will outlive this scope — it is hashed immediately.
-    // Privacy: only the hash is stored; Google's account identifier is discarded.
-    const userId = await sha256Hex(profile.sub);
+    // Step 3: Hash the account identifier immediately — never store the raw value.
+    const userId = await sha256Hex(accountId);
 
     const userEmail = profile.email;
 
