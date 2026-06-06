@@ -1,8 +1,7 @@
 /**
  * popup.css — BillAlert Chrome Extension
  *
- * Clean, modern card-based UI for non-technical everyday users.
- * Color scheme: deep blue (#1a73e8) primary, white background, soft shadows.
+ * Clean, modern UI. Soft shadows, rounded corners, neutral palette.
  * Fixed width of 380px — standard Chrome extension popup width.
  */
 
@@ -17,11 +16,11 @@
 html, body {
   width: 380px;
   min-height: 200px;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #202124;
-  background-color: #f8f9fa;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #1c1c1e;
+  background-color: #f2f2f7;
 }
 
 /* ─── Header ───────────────────────────────────────────────────────────────── */
@@ -30,66 +29,67 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 16px 10px;
-  background-color: #1a73e8;
+  padding: 14px 16px 12px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: #fff;
 }
 
 .header-logo {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
 }
 
 .app-title {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 /* ─── View containers ──────────────────────────────────────────────────────── */
 
 .view {
-  padding: 12px 14px;
+  padding: 12px 12px 4px;
 }
 
 /* ─── Hero / sign-in card ──────────────────────────────────────────────────── */
 
 .hero-card {
   background: #fff;
-  border-radius: 12px;
-  padding: 20px 18px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  border-radius: 16px;
+  padding: 22px 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
   text-align: center;
 }
 
 .hero-text {
-  font-size: 13.5px;
-  color: #444;
+  font-size: 13px;
+  color: #48484a;
   margin-bottom: 14px;
+  line-height: 1.6;
 }
 
 .feature-list {
   list-style: none;
   text-align: left;
-  margin: 0 auto 18px;
+  margin: 0 auto 20px;
   display: inline-block;
-  font-size: 13px;
-  color: #555;
+  font-size: 12.5px;
+  color: #48484a;
 }
 
 .feature-list li {
-  padding: 3px 0;
+  padding: 4px 0;
 }
 
-/* ─── Cards (generic) ──────────────────────────────────────────────────────── */
+/* ─── Cards ────────────────────────────────────────────────────────────────── */
 
 .card {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 14px 14px 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.10);
-  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  margin-bottom: 10px;
 }
 
 .card-header {
@@ -100,15 +100,17 @@ html, body {
 }
 
 .card-title {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: #202124;
+  font-size: 14px;
+  font-weight: 650;
+  color: #1c1c1e;
+  letter-spacing: -0.1px;
 }
 
 .card-subtitle {
-  font-size: 12.5px;
-  color: #666;
+  font-size: 12px;
+  color: #6e6e73;
   margin-bottom: 10px;
+  line-height: 1.5;
 }
 
 /* ─── Identity bar ─────────────────────────────────────────────────────────── */
@@ -117,13 +119,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 4px 4px;
+  padding: 6px 2px 6px;
   margin-bottom: 4px;
 }
 
 .identity-email {
-  font-size: 12.5px;
-  color: #555;
+  font-size: 12px;
+  color: #6e6e73;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -136,63 +138,99 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-family: inherit;
-  font-weight: 500;
-  transition: background-color 0.15s, opacity 0.15s;
+  font-weight: 600;
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* Sizes */
 .btn-large {
-  padding: 10px 20px;
-  font-size: 14.5px;
+  padding: 10px 22px;
+  font-size: 14px;
+  border-radius: 12px;
 }
 
 .btn-small {
-  padding: 5px 12px;
-  font-size: 12.5px;
+  padding: 5px 13px;
+  font-size: 12px;
 }
 
-/* Styles */
 .btn-primary {
-  background-color: #1a73e8;
+  background-color: #2563eb;
   color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #1557b0;
+  background-color: #1d4ed8;
 }
 
 .btn-secondary {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: #eff6ff;
+  color: #2563eb;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #c5d8fd;
+  background-color: #dbeafe;
 }
 
 .btn-ghost {
   background-color: transparent;
-  color: #d93025;
-  border: 1px solid #d93025;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background-color: #fce8e6;
+  background-color: #fef2f2;
 }
 
 .btn-icon {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
+}
+
+/* ─── Tabs ─────────────────────────────────────────────────────────────────── */
+
+.tab-bar {
+  display: flex;
+  background: #f2f2f7;
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 12px;
+  gap: 2px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6e6e73;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #2563eb;
+  box-shadow: 0 1px 4px rgba(0,0,0,.10);
+}
+
+.tab-btn:hover:not(.active) {
+  color: #1c1c1e;
+}
+
+.tab-content[hidden] {
+  display: none !important;
 }
 
 /* ─── Bill list ────────────────────────────────────────────────────────────── */
@@ -201,56 +239,71 @@ html, body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
   padding: 2px 0;
 }
 
-/* Individual bill card */
 .bill-item {
   position: relative;
-  background: #f8f9fa;
-  border: 1px solid #e8eaed;
-  border-radius: 8px;
-  padding: 10px 12px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: #f9f9fb;
+  border: 1px solid #e5e5ea;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.bill-item.paid {
+  opacity: 0.5;
+}
+
+.bill-item.paid .bill-payee {
+  text-decoration: line-through;
+  color: #6e6e73;
+}
+
+.bill-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .bill-payee {
   font-weight: 600;
-  font-size: 14px;
-  color: #202124;
-  margin-bottom: 4px;
+  font-size: 13.5px;
+  color: #1c1c1e;
+  margin-bottom: 3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 270px;
+  max-width: 210px;
 }
 
 .bill-meta {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
 }
 
-/* Amount — shown in green to feel positive/actionable */
 .bill-amount {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
-  color: #188038; /* Google green */
+  color: #16a34a;
 }
 
-/* Due date — muted gray */
 .bill-due {
-  font-size: 12.5px;
-  color: #70757a;
+  font-size: 11.5px;
+  color: #6e6e73;
 }
 
-/* Confidence badge — small pill in the top-right corner */
+/* Confidence badge */
 .bill-confidence {
   position: absolute;
   top: 8px;
-  right: 10px;
-  font-size: 10px;
-  font-weight: 600;
+  right: 44px;
+  font-size: 9.5px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   padding: 2px 6px;
@@ -258,26 +311,62 @@ html, body {
 }
 
 .confidence-high {
-  background-color: #e6f4ea;
-  color: #137333;
+  background-color: #dcfce7;
+  color: #15803d;
 }
 
 .confidence-medium {
-  background-color: #fef7e0;
-  color: #b06000;
+  background-color: #fef9c3;
+  color: #a16207;
 }
 
 .confidence-low {
-  background-color: #fce8e6;
-  color: #c5221f;
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
 
-/* Empty state message */
+/* Empty state */
 .empty-state {
   text-align: center;
-  padding: 16px 0 8px;
-  color: #70757a;
-  font-size: 13px;
+  padding: 18px 0 10px;
+  color: #6e6e73;
+  font-size: 12.5px;
+}
+
+/* ─── Mark paid / undo buttons ─────────────────────────────────────────────── */
+
+.btn-mark-paid {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.btn-mark-paid:hover {
+  background: #bbf7d0;
+}
+
+.btn-undo-paid {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.btn-undo-paid:hover {
+  background: #fecaca;
 }
 
 /* ─── Loading spinner ──────────────────────────────────────────────────────── */
@@ -286,22 +375,21 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 18px 0;
+  padding: 20px 0;
   gap: 10px;
 }
 
-/* Ensure hidden attribute always wins over display:flex */
 .spinner-wrap[hidden] {
   display: none !important;
 }
 
 .spinner {
-  width: 28px;
-  height: 28px;
-  border: 3px solid #e8eaed;
-  border-top-color: #1a73e8;
+  width: 26px;
+  height: 26px;
+  border: 3px solid #e5e5ea;
+  border-top-color: #2563eb;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.75s linear infinite;
 }
 
 @keyframes spin {
@@ -309,8 +397,8 @@ html, body {
 }
 
 .spinner-label {
-  font-size: 12.5px;
-  color: #70757a;
+  font-size: 12px;
+  color: #6e6e73;
 }
 
 /* ─── Notification time chips ──────────────────────────────────────────────── */
@@ -319,7 +407,7 @@ html, body {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
   margin-bottom: 10px;
   min-height: 30px;
 }
@@ -328,29 +416,28 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: #eff6ff;
+  color: #2563eb;
   border-radius: 20px;
   padding: 4px 10px 4px 12px;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .time-chip-remove {
   background: none;
   border: none;
   cursor: pointer;
-  color: #5f6368;
+  color: #93c5fd;
   font-size: 15px;
   line-height: 1;
   padding: 0 2px;
   border-radius: 50%;
-  transition: background-color 0.12s;
 }
 
 .time-chip-remove:hover {
-  background-color: rgba(0,0,0,.08);
-  color: #d93025;
+  background-color: rgba(0,0,0,.07);
+  color: #ef4444;
 }
 
 /* ─── Time picker row ──────────────────────────────────────────────────────── */
@@ -363,113 +450,20 @@ html, body {
 
 .time-input {
   flex: 1;
-  border: 1px solid #dadce0;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 13px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 12.5px;
   font-family: inherit;
-  color: #202124;
+  color: #1c1c1e;
+  background: #f9f9fb;
   outline: none;
-  transition: border-color 0.15s;
 }
 
 .time-input:focus {
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26,115,232,.2);
-}
-
-/* ─── Bill checklist ─────────────────────────────────────────────────────────── */
-
-.bill-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.bill-item.paid {
-  opacity: 0.55;
-}
-
-.bill-item.paid .bill-payee {
-  text-decoration: line-through;
-  color: #70757a;
-}
-
-.btn-mark-paid {
-  flex-shrink: 0;
-  padding: 4px 10px;
-  font-size: 11px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #e6f4ea;
-  color: #137333;
-  font-weight: 600;
-}
-
-.btn-mark-paid:hover {
-  background: #ceead6;
-}
-
-.btn-undo-paid {
-  flex-shrink: 0;
-  padding: 4px 10px;
-  font-size: 11px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #fce8e6;
-  color: #c5221f;
-  font-weight: 600;
-}
-
-.btn-undo-paid:hover {
-  background: #f5c6c4;
-}
-
-.paid-section-header {
-  font-size: 12px;
-  font-weight: 600;
-  color: #70757a;
-  margin: 12px 0 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* ─── Tabs ─────────────────────────────────────────────────────────────────── */
-
-.tab-bar {
-  display: flex;
-  border-bottom: 2px solid #e8eaed;
-  margin-bottom: 10px;
-}
-
-.tab-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 8px 0;
-  font-size: 13px;
-  font-weight: 500;
-  color: #70757a;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.tab-btn.active {
-  color: #1a73e8;
-  border-bottom-color: #1a73e8;
-}
-
-.tab-btn:hover:not(.active) {
-  color: #202124;
-}
-
-.tab-content[hidden] {
-  display: none !important;
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
 }
 
 /* ─── Status bar ───────────────────────────────────────────────────────────── */
@@ -478,22 +472,22 @@ html, body {
   display: flex;
   align-items: center;
   padding: 8px 14px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
-  border-top: 1px solid #e8eaed;
+  border-top: 1px solid #e5e5ea;
 }
 
 .status-success {
-  background-color: #e6f4ea;
-  color: #137333;
+  background-color: #f0fdf4;
+  color: #15803d;
 }
 
 .status-error {
-  background-color: #fce8e6;
-  color: #c5221f;
+  background-color: #fef2f2;
+  color: #b91c1c;
 }
 
 .status-info {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: #eff6ff;
+  color: #2563eb;
 }
