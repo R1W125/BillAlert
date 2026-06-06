@@ -55,7 +55,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     // No automatic scan on install — user triggers scans manually via
     // the popup. Alarms are only created when the user adds a reminder
     // time in the notification time picker.
-    console.log('BillAlert: installed. Scans are manual until user sets a reminder time.');
   }
 });
 
@@ -113,7 +112,6 @@ async function recreateAlarms(times) {
       periodInMinutes: 24 * 60, // repeat every 24 hours
     });
 
-    console.log(`BillAlert: alarm set — ${time} (next: ${nextFire.toLocaleString()})`);
   }
 }
 
@@ -125,7 +123,6 @@ async function recreateAlarms(times) {
  */
 chrome.alarms.onAlarm.addListener(alarm => {
   if (alarm.name.startsWith(ALARM_PREFIX)) {
-    console.log(`BillAlert: alarm fired — ${alarm.name}`);
     scanGmail();
   }
 });
@@ -141,7 +138,6 @@ chrome.alarms.onAlarm.addListener(alarm => {
  */
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === 'scanNow') {
-    console.log('BillAlert: received scanNow from popup');
     // Run async scan; respond when done.
     scanGmail()
       .then(() => sendResponse({ success: true }))
@@ -154,7 +150,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
   if (message.action === 'updateAlarms') {
     const times = message.times || [];
-    console.log('BillAlert: received updateAlarms', times);
     recreateAlarms(times)
       .then(() => sendResponse({ success: true }))
       .catch(err => sendResponse({ success: false, error: err.message }));
@@ -171,7 +166,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
  * is independent.
  */
 async function scanGmail() {
-  console.log('BillAlert: starting Gmail scan');
 
   // ── Step 1: Retrieve stored auth token ────────────────────────────────────
   // getStoredToken() is provided by auth.js.
@@ -190,7 +184,6 @@ async function scanGmail() {
   }
 
   if (!authToken) {
-    console.log('BillAlert: no auth token — skipping scan');
     return;
   }
 
@@ -209,11 +202,9 @@ async function scanGmail() {
   }
 
   if (!emails || emails.length === 0) {
-    console.log('BillAlert: no matching emails found');
     return;
   }
 
-  console.log(`BillAlert: found ${emails.length} matching email(s)`);
 
   // ── Step 3: Get user ID to send to backend ────────────────────────────────
   // getUserId() should return a hashed identifier — provided by auth.js.
@@ -239,13 +230,11 @@ async function scanGmail() {
   }
 
   if (!bills || bills.length === 0) {
-    console.log('BillAlert: backend returned no bills');
     return;
   }
 
   // ── Step 5: Save results to local storage ─────────────────────────────────
   await chrome.storage.local.set({ billSummary: bills });
-  console.log(`BillAlert: saved ${bills.length} bill(s) to storage`);
 
   // ── Step 6: Fire browser notification ─────────────────────────────────────
   await fireNotification(bills);

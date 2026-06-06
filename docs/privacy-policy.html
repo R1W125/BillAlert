@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BillAlert — Privacy Policy</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #1c1c1e;
+      background: #f9f9fb;
+      padding: 40px 20px 80px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header { margin-bottom: 40px; }
+    h1 { font-size: 28px; font-weight: 700; color: #1c1c1e; margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: #6e6e73; }
+    h2 { font-size: 17px; font-weight: 650; margin: 32px 0 10px; color: #1c1c1e; }
+    p { margin-bottom: 12px; color: #3a3a3c; }
+    ul { padding-left: 20px; margin-bottom: 12px; color: #3a3a3c; }
+    ul li { margin-bottom: 6px; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    }
+    .highlight {
+      background: #eff6ff;
+      border-left: 3px solid #2563eb;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      color: #1e40af;
+      font-size: 14px;
+    }
+    footer { margin-top: 40px; font-size: 12px; color: #6e6e73; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔔 BillAlert Privacy Policy</h1>
+      <p class="subtitle">Last updated: June 2026</p>
+    </header>
+
+    <div class="card">
+
+      <div class="highlight">
+        <strong>Short version:</strong> BillAlert reads your Gmail to find bill emails. Your email content never leaves your device — only anonymised metadata is sent to our AI service to extract bill amounts and dates. We don't sell data or track you.
+      </div>
+
+      <h2>1. What BillAlert Does</h2>
+      <p>BillAlert is a Chrome extension that scans your Gmail inbox for emails related to bills, invoices, subscriptions, and payments. It uses AI to extract the payee, amount, and due date, then displays them in the extension popup as a personal bill tracker.</p>
+
+      <h2>2. Data We Access</h2>
+      <p>BillAlert requests the following Google account permissions:</p>
+      <ul>
+        <li><strong>Gmail (read-only):</strong> To search your inbox for bill-related emails. We request the minimum Gmail scope and never modify, delete, or send emails on your behalf.</li>
+        <li><strong>Google account profile:</strong> To display your email address in the extension and create an anonymised user ID for rate-limiting purposes.</li>
+      </ul>
+
+      <h2>3. Data We Store Locally</h2>
+      <p>The following data is stored exclusively in your browser's local extension storage (<code>chrome.storage.local</code>) and never transmitted to us:</p>
+      <ul>
+        <li>Your OAuth access token (used to call Gmail API)</li>
+        <li>Your email address (displayed in the popup)</li>
+        <li>Bill summaries extracted from your emails</li>
+        <li>Your paid bills history and notification preferences</li>
+      </ul>
+
+      <h2>4. Data Sent to Our Backend</h2>
+      <p>When you click "Scan Now", BillAlert sends the following to our backend server for AI processing:</p>
+      <ul>
+        <li><strong>Email metadata only:</strong> Subject line, sender name, date, and a short snippet (first ~100 characters) of each matching email. <strong>Full email bodies are never sent.</strong></li>
+        <li><strong>Anonymised user ID:</strong> A one-way SHA-256 hash of your Google account identifier. This hash cannot be reversed to identify you and is used only for rate limiting.</li>
+      </ul>
+      <p>This data is processed in real time to extract bill information and is <strong>not logged, stored, or retained</strong> on our servers after your request completes.</p>
+
+      <h2>5. Third-Party AI Service</h2>
+      <p>Bill extraction is powered by Google Gemini AI via the Google AI API. Email metadata sent for processing is subject to <a href="https://ai.google.dev/terms" target="_blank">Google AI's terms of service</a>. We send only the minimum data necessary for bill extraction.</p>
+
+      <h2>6. Data We Do NOT Collect</h2>
+      <ul>
+        <li>We do not read, store, or transmit full email bodies</li>
+        <li>We do not collect browsing history or any data outside Gmail</li>
+        <li>We do not sell, share, or monetise any user data</li>
+        <li>We do not use cookies or cross-site tracking</li>
+        <li>We do not store your OAuth token on our servers</li>
+      </ul>
+
+      <h2>7. Data Retention</h2>
+      <p>All bill data, tokens, and preferences are stored locally in your browser and can be deleted at any time by signing out of BillAlert or uninstalling the extension. Signing out also revokes your OAuth token at Google's authorization server.</p>
+
+      <h2>8. Security</h2>
+      <p>All communication between the extension and our backend is encrypted via HTTPS. Your OAuth token is stored in Chrome's sandboxed extension storage, inaccessible to other extensions or websites.</p>
+
+      <h2>9. Children's Privacy</h2>
+      <p>BillAlert is not directed at children under 13 and we do not knowingly collect data from children.</p>
+
+      <h2>10. Changes to This Policy</h2>
+      <p>If we make material changes to this privacy policy, we will update the "Last updated" date above. Continued use of BillAlert after changes constitutes acceptance of the updated policy.</p>
+
+      <h2>11. Contact</h2>
+      <p>If you have questions about this privacy policy or how BillAlert handles your data, please open an issue at <a href="https://github.com/R1W125/BillAlert" target="_blank">github.com/R1W125/BillAlert</a>.</p>
+
+    </div>
+
+    <footer>
+      &copy; 2026 BillAlert. Built with privacy in mind.
+    </footer>
+  </div>
+</body>
+</html>

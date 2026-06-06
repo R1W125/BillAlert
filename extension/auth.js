@@ -58,8 +58,8 @@ const STORAGE_KEYS = {
  * @param {string} message
  * @param {...*} args - Additional arguments forwarded to console.
  */
-function log(message, ...args) {
-  console.log(`${LOG_PREFIX} ${message}`, ...args);
+function log(_message, ..._args) {
+  // Logging disabled in production
 }
 
 /**
