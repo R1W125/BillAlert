@@ -15,7 +15,6 @@
   </header>
 
   <!-- ===== SIGNED-OUT STATE ===== -->
-  <!-- Shown when the user has not connected their Google account yet -->
   <section id="view-signed-out" class="view" hidden>
     <div class="hero-card">
       <p class="hero-text">
@@ -35,7 +34,6 @@
   </section>
 
   <!-- ===== SIGNED-IN STATE ===== -->
-  <!-- Shown once the user is authenticated -->
   <section id="view-signed-in" class="view" hidden>
 
     <!-- User identity bar -->
@@ -44,7 +42,7 @@
       <button id="btn-sign-out" class="btn btn-ghost btn-small">Sign out</button>
     </div>
 
-    <!-- Scan controls -->
+    <!-- Bills card -->
     <div class="card scan-card">
       <div class="card-header">
         <h2 class="card-title">Bills &amp; Payments</h2>
@@ -53,20 +51,29 @@
         </button>
       </div>
 
-      <!-- Loading spinner — shown while scanning -->
-      <div id="scan-spinner" class="spinner-wrap" hidden>
-        <div class="spinner" role="status" aria-label="Scanning your Gmail…"></div>
-        <p class="spinner-label">Scanning your Gmail…</p>
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="upcoming">Upcoming</button>
+        <button class="tab-btn" data-tab="paid">Paid</button>
       </div>
 
-      <!-- Bill summary list -->
-      <div id="bill-list-wrap">
-        <ul id="bill-list" class="bill-list" aria-label="Upcoming bills">
-          <!-- Bill cards injected by popup.js -->
-        </ul>
-        <!-- Empty state when no bills were found -->
+      <!-- Upcoming tab -->
+      <div id="tab-upcoming" class="tab-content">
+        <div id="scan-spinner" class="spinner-wrap" hidden>
+          <div class="spinner" role="status" aria-label="Scanning your Gmail…"></div>
+          <p class="spinner-label">Scanning your Gmail…</p>
+        </div>
+        <ul id="bill-list" class="bill-list" aria-label="Upcoming bills"></ul>
         <p id="no-bills-msg" class="empty-state" hidden>
           No upcoming bills found. Try scanning again!
+        </p>
+      </div>
+
+      <!-- Paid tab -->
+      <div id="tab-paid" class="tab-content" hidden>
+        <ul id="paid-bill-list" class="bill-list" aria-label="Paid bills"></ul>
+        <p id="no-paid-msg" class="empty-state" hidden>
+          No paid bills yet. Mark bills as paid to track them here.
         </p>
       </div>
     </div>
@@ -77,13 +84,7 @@
       <p class="card-subtitle">
         Choose the times you'd like to receive bill reminders each day.
       </p>
-
-      <!-- List of chosen times -->
-      <ul id="time-list" class="time-list" aria-label="Reminder times">
-        <!-- Time chips injected by popup.js -->
-      </ul>
-
-      <!-- Add a new time -->
+      <ul id="time-list" class="time-list" aria-label="Reminder times"></ul>
       <div class="time-add-row">
         <input
           type="time"
@@ -101,12 +102,10 @@
   </section>
 
   <!-- ===== GLOBAL STATUS BAR ===== -->
-  <!-- Shows transient success / error messages -->
   <div id="status-bar" class="status-bar" role="status" aria-live="polite" hidden>
     <span id="status-message"></span>
   </div>
 
-  <!-- Auth functions provided by auth.js (Agent 3) -->
   <script src="auth.js"></script>
   <script src="popup.js"></script>
 </body>
