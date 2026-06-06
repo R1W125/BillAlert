@@ -173,8 +173,11 @@ function renderBillList(bills, paidIds = []) {
       ? formatDueDate(bill.dueDate)
       : 'Due date unknown';
 
-    // Confidence badge (high / medium / low)
-    const confidenceClass = `confidence-${(bill.confidence || 'low').toLowerCase()}`;
+    // Confidence badge — backend returns 0.0–1.0, convert to high/medium/low
+    const confidenceLabel = typeof bill.confidence === 'number'
+      ? (bill.confidence >= 0.7 ? 'high' : bill.confidence >= 0.4 ? 'medium' : 'low')
+      : (bill.confidence || 'low').toLowerCase();
+    const confidenceClass = `confidence-${confidenceLabel}`;
 
     // Paid bills get reduced opacity via CSS class; button differs per state
     li.innerHTML = `
@@ -185,7 +188,7 @@ function renderBillList(bills, paidIds = []) {
           <span class="bill-due">${dueDateText}</span>
         </div>
         <span class="bill-confidence ${confidenceClass}" title="Detection confidence">
-          ${(bill.confidence || 'low').toLowerCase()}
+          ${confidenceLabel}
         </span>
       </div>
       <button class="${isPaid ? 'btn-undo-paid' : 'btn-mark-paid'}" data-bill-id="${escapeHtml(billId)}">
