@@ -173,27 +173,46 @@ router.post('/', async (req, res) => {
     });
   }
 
-  // --- Call Gemini ---
+  // --- Call Gemini (with 2 retries for transient 503 errors) ---
   let bills;
-  try {
-    const model = getGeminiModel();
-    const prompt = buildPrompt(emails);
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const model = getGeminiModel();
+      const prompt = buildPrompt(emails);
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
 
-    bills = parseGeminiResponse(responseText);
-  } catch (err) {
-    console.error(`[summarize] Gemini error for userId=${uid}:`, err.message);
+      bills = parseGeminiResponse(responseText);
+      break; // success — exit retry loop
+    } catch (err) {
+      const is503 = err.message.includes('503') || err.message.includes('Service Unavailable');
 
-    if (err.message.includes('GEMINI_API_KEY')) {
-      return res.status(503).json({ error: 'service_unavailable', message: 'AI service not configured' });
+      if (is503 && attempt < maxAttempts) {
+        // Wait 3s before retrying on 503
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+
+      console.error(`[summarize] Gemini error for userId=${uid}:`, err.message);
+
+      if (err.message.includes('GEMINI_API_KEY')) {
+        return res.status(503).json({ error: 'service_unavailable', message: 'AI service not configured' });
+      }
+
+      if (is503) {
+        return res.status(503).json({
+          error: 'ai_unavailable',
+          message: 'AI service is temporarily busy. Please try again in a minute.',
+        });
+      }
+
+      return res.status(502).json({
+        error: 'ai_error',
+        message: 'Failed to process emails with AI service. Please try again.',
+      });
     }
-
-    return res.status(502).json({
-      error: 'ai_error',
-      message: 'Failed to process emails with AI service. Please try again.',
-    });
   }
 
   // --- Increment usage AFTER successful AI call ---
