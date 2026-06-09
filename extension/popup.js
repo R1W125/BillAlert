@@ -202,9 +202,16 @@ function buildBillItem(bill, isPaid) {
     ? `Paid ${formatPaidDate(bill.paidAt)}`
     : '';
 
+  const gmailLink = bill.emailId
+    ? `<a class="bill-email-link" href="https://mail.google.com/mail/u/0/#inbox/${bill.emailId}" target="_blank" title="View email">✉</a>`
+    : '';
+
   li.innerHTML = `
     <div class="bill-info">
-      <div class="bill-payee">${escapeHtml(bill.payee || 'Unknown Payee')}</div>
+      <div class="bill-payee-row">
+        <span class="bill-payee">${escapeHtml(bill.payee || 'Unknown Payee')}</span>
+        ${gmailLink}
+      </div>
       <div class="bill-meta">
         <span class="bill-amount">${amountText}</span>
         <span class="bill-due">${isPaid ? paidDateText : dueDateText}</span>

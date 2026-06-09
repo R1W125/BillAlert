@@ -269,15 +269,33 @@ html, body {
   min-width: 0;
 }
 
+.bill-payee-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.bill-email-link {
+  font-size: 12px;
+  color: #2563eb;
+  text-decoration: none;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.bill-email-link:hover {
+  opacity: 1;
+}
+
 .bill-payee {
   font-weight: 600;
   font-size: 13.5px;
   color: #1c1c1e;
-  margin-bottom: 3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 210px;
+  max-width: 200px;
 }
 
 .bill-meta {

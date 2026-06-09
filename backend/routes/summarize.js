@@ -79,7 +79,8 @@ Return ONLY a JSON array (no markdown, no explanation) where each element repres
     "payee": "string — the company or person to be paid",
     "amount": "string — the monetary amount with currency symbol, e.g. '$42.99'. Use null if not found.",
     "dueDate": "string — the due date in ISO 8601 format (YYYY-MM-DD) if determinable, otherwise a human-readable date. Use null if not found.",
-    "confidence": "number — your confidence score from 0.0 to 1.0 that this is a genuine bill/payment email"
+    "confidence": "number — your confidence score from 0.0 to 1.0 that this is a genuine bill/payment email",
+    "emailIndex": "number — the 1-based index of the source email (e.g. 1 for Email 1, 2 for Email 2)"
   }
 ]
 
@@ -88,6 +89,7 @@ Rules:
 - Omit emails that are clearly not financial (newsletters, promotions unrelated to payment, etc.).
 - If an email contains multiple bills, create multiple entries.
 - Do NOT fabricate amounts or dates — use null if the information is absent.
+- Always include emailIndex so the bill can be traced back to its source email.
 - Output ONLY the JSON array. No text before or after it.`;
 }
 
@@ -126,10 +128,11 @@ function parseGeminiResponse(text) {
 
   // Normalise each entry to the expected shape
   return parsed.map((item) => ({
-    payee: item.payee || null,
-    amount: item.amount || null,
-    dueDate: item.dueDate || null,
+    payee:      item.payee      || null,
+    amount:     item.amount     || null,
+    dueDate:    item.dueDate    || null,
     confidence: typeof item.confidence === 'number' ? Math.min(1, Math.max(0, item.confidence)) : null,
+    emailIndex: typeof item.emailIndex === 'number' ? item.emailIndex : null,
   }));
 }
 
@@ -215,14 +218,22 @@ router.post('/', async (req, res) => {
     }
   }
 
+  // --- Map emailIndex back to Gmail message ID ---
+  const billsWithLinks = bills.map(bill => {
+    const sourceEmail = bill.emailIndex != null
+      ? emails[bill.emailIndex - 1]
+      : null;
+    return {
+      ...bill,
+      emailId: sourceEmail ? sourceEmail.id : null,
+    };
+  });
+
   // --- Increment usage AFTER successful AI call ---
   const usageResult = incrementUsage(uid);
 
-  // Log only non-sensitive info
-  console.log(`[summarize] userId=${uid} scansUsed=${usageResult.scansUsed} billsFound=${bills.length}`);
-
   return res.json({
-    bills,
+    bills: billsWithLinks,
     scansUsed: usageResult.scansUsed,
     scansLimit: FREE_TIER_LIMIT,
   });
